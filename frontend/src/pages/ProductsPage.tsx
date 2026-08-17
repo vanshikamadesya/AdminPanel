@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { Package2, Plus, Search } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { ConfirmationDialog } from '../components/ui/ConfirmationDialog';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { DataTable, type Column } from '../components/ui/DataTable';
 import { Drawer } from '../components/ui/Drawer';
@@ -30,6 +31,7 @@ export function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -170,11 +172,15 @@ export function ProductsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    setDeleteId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteId) return;
 
     try {
       dispatch(setLoading(true));
-      const response = await productService.deleteProduct(id);
+      const response = await productService.deleteProduct(deleteId);
       if (response.data.success) {
         toast.success('Product deleted successfully.');
         fetchProducts(1, searchTerm);
@@ -184,6 +190,7 @@ export function ProductsPage() {
       toast.error(message);
     } finally {
       dispatch(setLoading(false));
+      setDeleteId(null);
     }
   };
 
@@ -402,6 +409,17 @@ export function ProductsPage() {
           </div>
         </form>
       </Drawer>
+
+      <ConfirmationDialog
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={confirmDelete}
+        title="Delete Product"
+        description="Are you sure you want to delete this product? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+        isLoading={loading}
+      />
     </div>
   );
 }

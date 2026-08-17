@@ -46,4 +46,19 @@ export const authService = {
     const response = await api.post('/auth/forgot-password', { email });
     return response.data;
   },
+
+  resetPassword: async (token: string, password: string): Promise<ApiResponse> => {
+    const response = await api.post('/auth/reset-password', { token, password });
+    return response.data;
+  },
+
+  verifyEmail: async (token: string): Promise<ApiResponse> => {
+    const response = await api.post('/auth/verify-email', { token });
+    return response.data;
+  },
+
+  resendVerification: async (email: string): Promise<ApiResponse> => {
+    const response = await api.post('/auth/resend-verification', { email });
+    return response.data;
+  },
 };

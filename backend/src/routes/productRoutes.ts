@@ -6,7 +6,8 @@ import {
   updateProduct,
   deleteProduct,
 } from '../controllers/productController';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
+import { UserRole } from '../types';
 
 const router = Router();
 
@@ -44,7 +45,7 @@ router.get('/:id', getProductById);
  *     security:
  *       - bearerAuth: []
  */
-router.post('/', createProduct);
+router.post('/', authorize(UserRole.ADMIN, UserRole.MODERATOR), createProduct);
 
 /**
  * @swagger
@@ -55,7 +56,7 @@ router.post('/', createProduct);
  *     security:
  *       - bearerAuth: []
  */
-router.put('/:id', updateProduct);
+router.put('/:id', authorize(UserRole.ADMIN, UserRole.MODERATOR), updateProduct);
 
 /**
  * @swagger
@@ -66,6 +67,6 @@ router.put('/:id', updateProduct);
  *     security:
  *       - bearerAuth: []
  */
-router.delete('/:id', deleteProduct);
+router.delete('/:id', authorize(UserRole.ADMIN), deleteProduct);
 
 export default router;

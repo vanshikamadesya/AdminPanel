@@ -6,7 +6,8 @@ import {
   updateRole,
   deleteRole,
 } from '../controllers/roleController';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
+import { UserRole } from '../types';
 
 const router = Router();
 
@@ -44,7 +45,7 @@ router.get('/:id', getRoleById);
  *     security:
  *       - bearerAuth: []
  */
-router.post('/', createRole);
+router.post('/', authorize(UserRole.ADMIN), createRole);
 
 /**
  * @swagger
@@ -55,7 +56,7 @@ router.post('/', createRole);
  *     security:
  *       - bearerAuth: []
  */
-router.put('/:id', updateRole);
+router.put('/:id', authorize(UserRole.ADMIN), updateRole);
 
 /**
  * @swagger
@@ -66,6 +67,6 @@ router.put('/:id', updateRole);
  *     security:
  *       - bearerAuth: []
  */
-router.delete('/:id', deleteRole);
+router.delete('/:id', authorize(UserRole.ADMIN), deleteRole);
 
 export default router;

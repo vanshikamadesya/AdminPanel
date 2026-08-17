@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { Plus, Search, UserPlus } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { ConfirmationDialog } from '../components/ui/ConfirmationDialog';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { DataTable, type Column } from '../components/ui/DataTable';
 import { Drawer } from '../components/ui/Drawer';
@@ -31,6 +32,7 @@ export function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -187,11 +189,15 @@ export function UsersPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this user?')) return;
+    setDeleteId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteId) return;
 
     try {
       dispatch(setLoading(true));
-      const response = await userService.deleteUser(id);
+      const response = await userService.deleteUser(deleteId);
       if (response.data.success) {
         toast.success('User removed successfully.');
         fetchUsers(1, searchTerm);
@@ -201,6 +207,7 @@ export function UsersPage() {
       toast.error(message);
     } finally {
       dispatch(setLoading(false));
+      setDeleteId(null);
     }
   };
 
@@ -337,6 +344,17 @@ export function UsersPage() {
           </div>
         </form>
       </Drawer>
+
+      <ConfirmationDialog
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={confirmDelete}
+        title="Delete User"
+        description="Are you sure you want to delete this user? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+        isLoading={loading}
+      />
     </div>
   );
 }

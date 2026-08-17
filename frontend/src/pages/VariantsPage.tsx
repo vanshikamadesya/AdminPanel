@@ -6,6 +6,7 @@ import * as productService from '../services/productService';
 import toast from 'react-hot-toast';
 import { Plus, Search } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { ConfirmationDialog } from '../components/ui/ConfirmationDialog';
 import { DataTable, type Column } from '../components/ui/DataTable';
 import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
@@ -15,6 +16,7 @@ const VariantsPage = () => {
   const { variants, loading } = useAppSelector((state) => state.variant);
   const [products, setProducts] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -179,11 +181,15 @@ const VariantsPage = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this variant?')) return;
+    setDeleteId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteId) return;
 
     try {
       dispatch(setLoading(true));
-      const response = await variantService.deleteVariant(id);
+      const response = await variantService.deleteVariant(deleteId);
       if (response.data.success) {
         toast.success('Variant deleted successfully');
         fetchVariants(1, searchTerm);
@@ -193,6 +199,7 @@ const VariantsPage = () => {
       toast.error(message);
     } finally {
       dispatch(setLoading(false));
+      setDeleteId(null);
     }
   };
 
@@ -201,8 +208,8 @@ const VariantsPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Variants</h1>
-          <p className="mt-1 text-gray-600 dark:text-gray-400">Manage product variants</p>
+          <h1 className="text-3xl font-bold text-foreground">Variants</h1>
+          <p className="mt-1 text-muted-foreground">Manage product variants</p>
         </div>
         <Button onClick={() => handleOpenModal()} className="flex items-center gap-2">
           <Plus size={20} />
@@ -212,7 +219,7 @@ const VariantsPage = () => {
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute top-3 left-3 text-gray-400" size={20} />
+        <Search className="absolute top-3 left-3 text-muted-foreground" size={20} />
         <Input
           type="text"
           placeholder="Search variants by name or SKU..."
@@ -223,7 +230,7 @@ const VariantsPage = () => {
       </div>
 
       {/* Variants Table */}
-      <div className="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+      <div className="overflow-hidden rounded-lg bg-card shadow">
         <DataTable
           data={variants}
           columns={columns}
@@ -249,13 +256,13 @@ const VariantsPage = () => {
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               Product *
             </label>
             <select
               value={formData.product}
               onChange={(e) => setFormData({ ...formData, product: e.target.value })}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="w-full rounded-lg border border-input bg-background px-4 py-2 text-foreground focus:ring-2 focus:ring-ring"
               required
             >
               <option value="">Select a product</option>
@@ -269,7 +276,7 @@ const VariantsPage = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-foreground">
                 Variant Name *
               </label>
               <Input
@@ -281,7 +288,7 @@ const VariantsPage = () => {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-foreground">
                 SKU *
               </label>
               <Input
@@ -296,7 +303,7 @@ const VariantsPage = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-foreground">
                 Price *
               </label>
               <Input
@@ -310,7 +317,7 @@ const VariantsPage = () => {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-foreground">
                 Stock
               </label>
               <Input
@@ -324,7 +331,7 @@ const VariantsPage = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-foreground">
                 Cost Price
               </label>
               <Input
@@ -337,7 +344,7 @@ const VariantsPage = () => {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-foreground">
                 Discount Price
               </label>
               <Input
@@ -357,16 +364,23 @@ const VariantsPage = () => {
             <Button type="submit" disabled={loading} className="flex-1">
               {editingId ? 'Update Variant' : 'Create Variant'}
             </Button>
-            <Button
-              type="button"
-              onClick={() => setShowModal(false)}
-              className="flex-1 bg-gray-200 text-gray-900 hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-            >
+            <Button type="button" variant="outline" onClick={() => setShowModal(false)} className="flex-1">
               Cancel
             </Button>
           </div>
         </form>
       </Modal>
+
+      <ConfirmationDialog
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={confirmDelete}
+        title="Delete Variant"
+        description="Are you sure you want to delete this variant? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+        isLoading={loading}
+      />
     </div>
   );
 };

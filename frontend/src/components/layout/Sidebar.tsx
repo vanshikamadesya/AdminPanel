@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -8,9 +8,11 @@ import {
   X,
   Shield,
   Grid3X3,
+  Settings,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/Button';
+import { Avatar } from '../ui/Avatar';
 import { useAppSelector } from '../../store/hooks';
 
 interface SidebarProps {
@@ -24,61 +26,75 @@ const navItems = [
     title: 'Dashboard',
     icon: LayoutDashboard,
     href: '/dashboard',
+    roles: ['admin', 'moderator', 'user'],
   },
   {
     title: 'Users',
     icon: Users,
     href: '/users',
+    roles: ['admin'],
   },
   {
     title: 'Roles & Permissions',
     icon: Shield,
     href: '/roles',
+    roles: ['admin'],
   },
   {
     title: 'Products',
     icon: Package2,
     href: '/products',
+    roles: ['admin', 'moderator'],
   },
   {
     title: 'Attributes',
     icon: Grid3X3,
     href: '/attributes',
+    roles: ['admin', 'moderator'],
   },
   {
     title: 'Variants',
     icon: Package2,
     href: '/variants',
+    roles: ['admin', 'moderator'],
   },
   {
     title: 'Analytics',
     icon: BarChart3,
     href: '/analytics',
+    roles: ['admin', 'moderator'],
   },
   {
     title: 'Reports',
     icon: FileText,
     href: '/reports',
+    roles: ['admin', 'moderator'],
+  },
+  {
+    title: 'Settings',
+    icon: Settings,
+    href: '/settings',
+    roles: ['admin', 'moderator', 'user'],
   },
 ];
 
 export function Sidebar({ isOpen, isCollapsed, onClose }: SidebarProps) {
   const { user } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
 
-  // Show all navigation items to all logged-in users
-  const filteredNavItems = navItems;
+  const filteredNavItems = navItems.filter((item) =>
+    item.roles.includes(user?.role || 'user')
+  );
 
   return (
     <>
-      {/* Overlay for mobile */}
       {isOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden cursor-pointer" 
-          onClick={onClose} 
+        <div
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden cursor-pointer"
+          onClick={onClose}
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={cn(
           'fixed top-0 left-0 z-50 flex h-full w-72 flex-col border-r border-white/10 bg-slate-950 text-slate-100 shadow-2xl transition-[transform,width] duration-300 lg:translate-x-0',
@@ -122,18 +138,18 @@ export function Sidebar({ isOpen, isCollapsed, onClose }: SidebarProps) {
             >
               {({ isActive }) => (
                 <>
-                  <item.icon 
+                  <item.icon
                     className={cn(
                       "h-5 w-5 transition-transform duration-200",
                       isActive ? "text-sky-600" : "group-hover:scale-110"
-                    )} 
+                    )}
                   />
                   <span className={cn(isCollapsed && 'lg:hidden')}>{item.title}</span>
                   {isActive && (
-                    <svg 
+                    <svg
                       className={cn('ml-auto h-5 w-5', isCollapsed && 'lg:hidden')}
-                      fill="none" 
-                      viewBox="0 0 24 24" 
+                      fill="none"
+                      viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -145,16 +161,16 @@ export function Sidebar({ isOpen, isCollapsed, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        {/* User Profile Footer */}
         <div className={cn('mt-auto border-t border-white/10 p-4', isCollapsed && 'lg:p-3')}>
-          <div 
+          <div
             className={cn('flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 transition-all duration-200 hover:bg-white/10', isCollapsed && 'lg:justify-center lg:border-0 lg:bg-transparent lg:p-1')}
-            onClick={() => window.location.href = '/profile'}
+            onClick={() => { navigate('/profile'); onClose(); }}
           >
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-sky-400 to-indigo-500 text-sm font-bold text-white shadow-lg">
-              {user?.firstName?.[0]?.toUpperCase() || 'U'}
-              {user?.lastName?.[0]?.toUpperCase() || ''}
-            </div>
+            <Avatar
+              firstName={user?.firstName || 'U'}
+              lastName={user?.lastName || ''}
+              size="md"
+            />
             <div className={cn('min-w-0 flex-1', isCollapsed && 'lg:hidden')}>
               <p className="truncate text-sm font-semibold text-white">
                 {user?.firstName} {user?.lastName}

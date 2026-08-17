@@ -6,7 +6,8 @@ import {
   updateVariant,
   deleteVariant,
 } from '../controllers/variantController';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
+import { UserRole } from '../types';
 
 const router = Router();
 
@@ -44,7 +45,7 @@ router.get('/:id', getVariantById);
  *     security:
  *       - bearerAuth: []
  */
-router.post('/', createVariant);
+router.post('/', authorize(UserRole.ADMIN, UserRole.MODERATOR), createVariant);
 
 /**
  * @swagger
@@ -55,7 +56,7 @@ router.post('/', createVariant);
  *     security:
  *       - bearerAuth: []
  */
-router.put('/:id', updateVariant);
+router.put('/:id', authorize(UserRole.ADMIN, UserRole.MODERATOR), updateVariant);
 
 /**
  * @swagger
@@ -66,6 +67,6 @@ router.put('/:id', updateVariant);
  *     security:
  *       - bearerAuth: []
  */
-router.delete('/:id', deleteVariant);
+router.delete('/:id', authorize(UserRole.ADMIN), deleteVariant);
 
 export default router;

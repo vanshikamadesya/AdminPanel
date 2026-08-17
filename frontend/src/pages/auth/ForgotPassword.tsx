@@ -4,11 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Mail, ArrowLeft, CheckCircle, KeyRound } from 'lucide-react';
 import { authService } from '../../services/authService';
 import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
 import toast from 'react-hot-toast';
 
 const forgotPasswordSchema = z.object({
@@ -44,88 +42,181 @@ export function ForgotPassword() {
 
   if (emailSent) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 dark:from-indigo-900 dark:via-purple-900 dark:to-blue-900 px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-md"
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-5xl grid md:grid-cols-2 gap-0 rounded-3xl overflow-hidden shadow-2xl"
         >
-          <Card>
-            <CardHeader className="space-y-1 text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
-                <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
+          {/* Left Side - Success Message */}
+          <div className="bg-slate-900 dark:bg-slate-950 p-8 md:p-12 flex flex-col justify-center">
+            <div className="mb-8">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-500/10">
+                <CheckCircle className="h-8 w-8 text-green-400" />
               </div>
-              <CardTitle className="text-2xl">Check Your Email</CardTitle>
-              <CardDescription>
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 text-center">
+                Check Your Email
+              </h1>
+              <p className="text-slate-400 text-center">
                 We've sent a password reset link to your email address.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Link to="/login">
-                <Button variant="outline" className="w-full">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Login
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
+              </p>
+            </div>
+
+            <Link to="/login">
+              <Button className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-lg shadow-blue-500/30 transition-all">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Login
+              </Button>
+            </Link>
+          </div>
+
+          {/* Right Side - Gradient Wave Background */}
+          <div className="hidden md:block relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 overflow-hidden">
+            <div className="absolute inset-0 opacity-30">
+              <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#3B82F6', stopOpacity: 1 }} />
+                    <stop offset="50%" style={{ stopColor: '#8B5CF6', stopOpacity: 1 }} />
+                    <stop offset="100%" style={{ stopColor: '#EC4899', stopOpacity: 1 }} />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M 0,400 C 150,450 350,350 500,400 L 500,00 L 0,0 Z"
+                  fill="url(#gradient3)"
+                  className="animate-pulse"
+                  opacity="0.3"
+                />
+                <path
+                  d="M 0,450 C 200,480 300,420 500,460 L 500,00 L 0,0 Z"
+                  fill="url(#gradient3)"
+                  opacity="0.4"
+                />
+              </svg>
+            </div>
+            <div className="relative z-10 flex items-center justify-center h-full p-12">
+              <div className="text-center text-white">
+                <div className="mb-6">
+                  <div className="w-20 h-20 mx-auto bg-white/20 backdrop-blur-lg rounded-2xl flex items-center justify-center shadow-xl">
+                    <CheckCircle className="w-10 h-10" />
+                  </div>
+                </div>
+                <h2 className="text-3xl font-bold mb-4">Email Sent!</h2>
+                <p className="text-white/80 text-lg">
+                  Check your inbox and follow the instructions to reset your password
+                </p>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700 dark:from-indigo-900 dark:via-purple-900 dark:to-blue-900 px-4">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-5xl grid md:grid-cols-2 gap-0 rounded-3xl overflow-hidden shadow-2xl"
       >
-        <Card>
-          <CardHeader className="space-y-1 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <Mail className="h-6 w-6 text-primary" />
+        {/* Left Side - Gradient Wave Background */}
+        <div className="hidden md:block relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 overflow-hidden">
+          <div className="absolute inset-0 opacity-30">
+            <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#3B82F6', stopOpacity: 1 }} />
+                  <stop offset="50%" style={{ stopColor: '#8B5CF6', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#EC4899', stopOpacity: 1 }} />
+                </linearGradient>
+              </defs>
+              <path
+                d="M 0,400 C 150,450 350,350 500,400 L 500,00 L 0,0 Z"
+                fill="url(#gradient3)"
+                className="animate-pulse"
+                opacity="0.3"
+              />
+              <path
+                d="M 0,450 C 200,480 300,420 500,460 L 500,00 L 0,0 Z"
+                fill="url(#gradient3)"
+                opacity="0.4"
+              />
+            </svg>
+          </div>
+          <div className="relative z-10 flex items-center justify-center h-full p-12">
+            <div className="text-center text-white">
+              <div className="mb-6">
+                <div className="w-20 h-20 mx-auto bg-white/20 backdrop-blur-lg rounded-2xl flex items-center justify-center shadow-xl">
+                  <KeyRound className="w-10 h-10" />
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold mb-4">Forgot Password?</h2>
+              <p className="text-white/80 text-lg">
+                No worries! We'll help you reset your password and get back into your account
+              </p>
             </div>
-            <CardTitle className="text-3xl">Forgot Password?</CardTitle>
-            <CardDescription>
-              Enter your email and we'll send you a reset link
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          </div>
+        </div>
+
+        {/* Right Side - Form */}
+        <div className="bg-slate-900 dark:bg-slate-950 p-8 md:p-12 flex flex-col justify-center">
+          <div className="mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+              Reset Password
+            </h1>
+            <p className="text-slate-400">
+              Enter your email to receive a reset link or{' '}
+              <Link to="/login" className="text-blue-400 hover:text-blue-300 font-medium cursor-pointer hover:underline transition-all">
+                click here to go back to login
+              </Link>
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
+                Email Address
+              </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-9 h-5 w-5 text-muted-foreground" />
-                <Input
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
+                <input
                   {...register('email')}
+                  id="email"
                   type="email"
-                  label="Email"
-                  placeholder="john@example.com"
-                  error={errors.email?.message}
-                  className="pl-10"
+                  placeholder="Enter your email"
+                  className={`w-full pl-10 pr-4 py-3 bg-slate-800 border ${
+                    errors.email ? 'border-red-500' : 'border-slate-700'
+                  } rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
                 />
               </div>
-
-              <Button
-                type="submit"
-                className="w-full"
-                isLoading={isLoading}
-              >
-                Send Reset Link
-              </Button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <Link
-                to="/login"
-                className="inline-flex items-center text-sm text-primary hover:underline"
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Login
-              </Link>
+              {errors.email && (
+                <p className="mt-1.5 text-xs text-red-400">{errors.email.message}</p>
+              )}
             </div>
-          </CardContent>
-        </Card>
+
+            <Button
+              type="submit"
+              className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-lg shadow-blue-500/30 transition-all"
+              isLoading={isLoading}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Sending...' : 'Send Reset Link'}
+            </Button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <Link
+              to="/login"
+              className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300 font-medium cursor-pointer hover:underline transition-all"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Login
+            </Link>
+          </div>
+        </div>
       </motion.div>
     </div>
   );

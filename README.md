@@ -1,122 +1,102 @@
-# MERN Stack SaaS Application
+# Orbit Admin Panel
 
-A production-ready, full-stack SaaS application built with the MERN stack (MongoDB, Express.js, React, Node.js) using TypeScript and modern best practices.
+A production-ready admin panel built with the MERN stack (MongoDB, Express.js, React, Node.js) using TypeScript and modern best practices.
 
-## 🚀 Features
+## Features
 
 ### Frontend
-- ⚛️ **React 19** with TypeScript
-- ⚡ **Vite** for lightning-fast builds
-- 🎨 **Tailwind CSS v4** with Shadcn/UI components
-- 🔐 **Complete Authentication System** (Login, Register, Password Reset, Email Verification)
-- 🌓 **Dark/Light Mode** with system theme detection
-- 📱 **Fully Responsive** dashboard and layouts
-- 🔄 **Redux Toolkit + RTK Query** for state management
-- 📝 **React Hook Form + Zod** for form validation
-- 🎭 **Framer Motion** for smooth animations
-- 🔍 **Advanced Data Tables** with sorting, filtering, pagination
+- **React 19** with TypeScript
+- **Vite 8** for lightning-fast builds
+- **Tailwind CSS v4** with custom design system
+- **Complete Authentication System** (Login, Register, Forgot Password, Reset Password, Email Verification)
+- **Dark/Light Mode** with system theme detection
+- **Fully Responsive** dashboard and layouts
+- **Redux Toolkit** for state management
+- **React Hook Form + Zod** for form validation
+- **Framer Motion** for smooth animations
+- **Reusable UI Components** (DataTable, Modal, Drawer, Pagination, Badge, Avatar, ConfirmationDialog)
+- **Lazy Loading** for optimized bundle splitting
+- **Error Boundary** for graceful error handling
 
 ### Backend
-- 🟢 **Node.js + Express.js** with TypeScript
-- 🍃 **MongoDB + Mongoose** ODM
-- 🔒 **JWT Authentication** with refresh tokens
-- 🛡️ **Advanced Security** (Helmet, CORS, Rate Limiting, XSS Protection)
-- 📊 **Swagger API Documentation**
-- ✅ **Express Validator** for request validation
-- 📝 **Morgan Logger** for request logging
-- 🔑 **Role-Based Access Control** (RBAC)
+- **Node.js + Express.js** with TypeScript
+- **MongoDB + Mongoose** ODM
+- **JWT Authentication** with access & refresh tokens
+- **Role-Based Access Control (RBAC)** with Admin, Moderator, and User roles
+- **Advanced Security** (Helmet, CORS, Rate Limiting)
+- **Swagger API Documentation**
+- **Express Validator** for request validation
+- **Morgan Logger** for request logging
 
-### DevOps & Tools
-- 🐳 **Docker Support** with Docker Compose
-- 🧪 **Testing Setup** (Vitest, React Testing Library, Jest, Supertest)
-- 🔧 **ESLint + Prettier** for code quality
-- 🐕 **Husky** for Git hooks
-- 📚 **Comprehensive Documentation**
-
-## 📦 Tech Stack
+## Tech Stack
 
 ### Frontend
-- React 19
-- TypeScript
-- Vite
+- React 19 + TypeScript
+- Vite 8
 - React Router v7
-- Redux Toolkit + RTK Query
+- Redux Toolkit
 - Tailwind CSS v4
-- Shadcn/UI
-- React Hook Form
-- Zod Validation
+- React Hook Form + Zod
 - Axios
 - Framer Motion
-- React Query (TanStack Query)
+- class-variance-authority
+- Lucide React icons
 
 ### Backend
-- Node.js
-- Express.js
-- TypeScript
-- MongoDB
-- Mongoose
-- JWT
+- Node.js + Express.js + TypeScript
+- MongoDB + Mongoose
+- JWT (jsonwebtoken)
 - Bcrypt
 - Express Validator
-- Helmet
-- CORS
-- Morgan
-- Rate Limiting
+- Helmet + CORS
+- Morgan + Winston
+- Swagger (swagger-jsdoc + swagger-ui-express)
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 ├── backend/
 │   ├── src/
-│   │   ├── config/          # Configuration files
-│   │   ├── controllers/     # Route controllers
-│   │   ├── middleware/      # Express middleware
-│   │   ├── models/          # Mongoose models
+│   │   ├── config/          # Email, logger configuration
+│   │   ├── controllers/     # Route controllers (auth, user, role, permission, product, attribute, variant)
+│   │   ├── middleware/      # Auth, error handler, validators
+│   │   ├── models/          # Mongoose models (User, Role, Permission, Product, Attribute, Variant)
 │   │   ├── routes/          # API routes
-│   │   ├── services/        # Business logic
-│   │   ├── validators/      # Request validators
-│   │   ├── utils/           # Utility functions
-│   │   ├── types/           # TypeScript types
-│   │   └── docs/            # API documentation
-│   ├── tests/               # Backend tests
+│   │   ├── types/           # TypeScript types & interfaces
+│   │   └── utils/           # Utility functions
 │   └── package.json
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── app/             # App configuration
-│   │   ├── components/      # Reusable components
-│   │   ├── pages/           # Page components
-│   │   ├── layouts/         # Layout components
-│   │   ├── hooks/           # Custom hooks
-│   │   ├── services/        # API services
-│   │   ├── store/           # Redux store
-│   │   ├── routes/          # Route definitions
+│   │   ├── components/
+│   │   │   ├── auth/        # PrivateRoute, auth guards
+│   │   │   ├── layout/      # DashboardLayout, Sidebar, Navbar
+│   │   │   └── ui/          # Reusable components (Button, Card, DataTable, Modal, Drawer, etc.)
+│   │   ├── pages/
+│   │   │   ├── auth/        # Login, Register, ForgotPassword, VerifyEmail, ResetPassword
+│   │   │   └── (page files) # Dashboard, Users, Products, Roles, Attributes, Variants, etc.
+│   │   ├── services/        # API service modules
+│   │   ├── store/           # Redux store + slices
 │   │   ├── types/           # TypeScript types
-│   │   ├── utils/           # Utility functions
-│   │   ├── constants/       # Constants
-│   │   ├── assets/          # Static assets
-│   │   └── themes/          # Theme configuration
-│   ├── tests/               # Frontend tests
+│   │   └── lib/             # Utility functions
 │   └── package.json
 │
-├── docker-compose.yml       # Docker compose configuration
-└── README.md               # Project documentation
+└── README.md
 ```
 
-## 🚦 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v18 or higher)
 - MongoDB (v6 or higher)
-- npm or yarn
-- Docker (optional, recommended)
+- npm
 
 ### Installation
 
 1. **Clone the repository**
 ```bash
 git clone <repository-url>
-cd Fullstack-app
+cd admin-panel
 ```
 
 2. **Install Backend Dependencies**
@@ -136,45 +116,18 @@ cp .env.example .env
 ```
 
 4. **Start MongoDB**
-
-Make sure MongoDB is running locally:
 ```bash
-# On Windows with MongoDB installed
+# On Windows
 net start MongoDB
 
-# On macOS with Homebrew
+# On macOS
 brew services start mongodb-community
 
 # On Linux
 sudo systemctl start mongod
 ```
 
-Or use Docker:
-```bash
-docker run -d -p 27017:27017 --name mongodb mongo:6
-```
-
 ### Running the Application
-
-#### Quick Start with Docker (Recommended)
-
-```bash
-# Start all services (MongoDB, Backend, Frontend)
-docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop all services
-docker-compose down
-```
-
-Access the application:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:5000
-- API Documentation: http://localhost:5000/api-docs
-
-#### Development Mode (Manual)
 
 **Terminal 1 - Backend:**
 ```bash
@@ -193,7 +146,7 @@ Access the application:
 - Backend API: http://localhost:5000
 - API Documentation: http://localhost:5000/api-docs
 
-#### Production Mode
+### Production Build
 
 **Backend:**
 ```bash
@@ -209,96 +162,158 @@ npm run build
 npm run preview
 ```
 
-## 🧪 Testing
+## Pages
 
-**Backend Tests:**
-```bash
-cd backend
-npm test
-```
+| Page | Route | Access | Description |
+|------|-------|--------|-------------|
+| Login | `/login` | Public | User authentication |
+| Register | `/register` | Public | New account creation |
+| Forgot Password | `/forgot-password` | Public | Request password reset email |
+| Reset Password | `/reset-password?token=xxx` | Public | Set new password via email link |
+| Verify Email | `/verify-email?token=xxx` | Public | Email verification via token |
+| Dashboard | `/dashboard` | All roles | Overview with stats and recent activity |
+| Users | `/users` | Admin | User management with CRUD |
+| Roles & Permissions | `/roles` | Admin | Role and permission management |
+| Products | `/products` | Admin, Moderator | Product management with CRUD |
+| Attributes | `/attributes` | Admin, Moderator | Product attribute management |
+| Variants | `/variants` | Admin, Moderator | Product variant management |
+| Analytics | `/analytics` | Admin, Moderator | Analytics dashboard |
+| Reports | `/reports` | Admin, Moderator | Reports dashboard |
+| Profile | `/profile` | All roles | User profile management |
+| Change Password | `/change-password` | All roles | Update account password |
+| Settings | `/settings` | All roles | Account preferences |
 
-**Frontend Tests:**
-```bash
-cd frontend
-npm test
-```
+## Authentication Flow
 
-## 📚 API Documentation
+1. **Register** - Create a new account (verification email sent)
+2. **Verify Email** - Click link in email to activate account
+3. **Login** - Authenticate with email/password, receive JWT tokens
+4. **Access Protected Routes** - Access token sent via Authorization header
+5. **Refresh Token** - Automatically refresh expired access tokens
+6. **Logout** - Invalidate refresh token and clear session
 
-Once the backend is running, access the API documentation at:
-```
-http://localhost:5000/api-docs
-```
+## Role-Based Access Control
 
-## 🔐 Authentication Flow
+| Role | Permissions |
+|------|------------|
+| **Admin** | Full access - manage users, roles, permissions, products, attributes, variants |
+| **Moderator** | Manage products, attributes, variants; view analytics and reports |
+| **User** | Dashboard, profile, and change password only |
 
-1. **Register**: Create a new user account
-2. **Email Verification**: Verify email via token
-3. **Login**: Authenticate and receive JWT tokens
-4. **Access Protected Routes**: Use access token in Authorization header
-5. **Refresh Token**: Automatically refresh expired access tokens
-6. **Logout**: Invalidate refresh token
+## API Endpoints
 
-## 🎨 Theme System
+### Auth
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login
+- `POST /api/auth/logout` - Logout
+- `POST /api/auth/refresh-token` - Refresh access token
+- `GET /api/auth/me` - Get current user
+- `POST /api/auth/forgot-password` - Request password reset
+- `POST /api/auth/reset-password` - Reset password with token
+- `POST /api/auth/verify-email` - Verify email with token
+- `POST /api/auth/resend-verification` - Resend verification email
 
-The application supports three theme modes:
-- **Light Mode**: Optimized light theme
-- **Dark Mode**: Eye-friendly dark theme
-- **System**: Automatically matches system preferences
+### Users (Admin only)
+- `GET /api/users` - List users with pagination
+- `GET /api/users/:id` - Get user by ID
+- `PUT /api/users/profile` - Update own profile
+- `PUT /api/users/change-password` - Change password
+- `PUT /api/users/:id/role` - Update user role
+- `PUT /api/users/:id/status` - Update user status
+- `DELETE /api/users/:id` - Delete user
+- `DELETE /api/users/account` - Delete own account
+- `GET /api/users/stats/dashboard` - Dashboard statistics
 
-Theme preference is persisted in localStorage.
+### Roles (Admin only)
+- `GET /api/roles` - List roles
+- `POST /api/roles` - Create role
+- `PUT /api/roles/:id` - Update role
+- `DELETE /api/roles/:id` - Delete role
 
-## 🛡️ Security Features
+### Permissions (Admin only)
+- `GET /api/permissions` - List permissions
+- `POST /api/permissions` - Create permission
+- `PUT /api/permissions/:id` - Update permission
+- `DELETE /api/permissions/:id` - Delete permission
 
-- JWT-based authentication
+### Products (Admin, Moderator)
+- `GET /api/products` - List products
+- `POST /api/products` - Create product (Admin, Moderator)
+- `PUT /api/products/:id` - Update product (Admin, Moderator)
+- `DELETE /api/products/:id` - Delete product (Admin only)
+
+### Attributes (Admin, Moderator)
+- `GET /api/attributes` - List attributes
+- `POST /api/attributes` - Create attribute (Admin, Moderator)
+- `PUT /api/attributes/:id` - Update attribute (Admin, Moderator)
+- `DELETE /api/attributes/:id` - Delete attribute (Admin only)
+
+### Variants (Admin, Moderator)
+- `GET /api/variants` - List variants
+- `POST /api/variants` - Create variant (Admin, Moderator)
+- `PUT /api/variants/:id` - Update variant (Admin, Moderator)
+- `DELETE /api/variants/:id` - Delete variant (Admin only)
+
+## Security Features
+
+- JWT-based authentication with access & refresh tokens
 - Password hashing with bcrypt
 - HTTP security headers (Helmet)
 - CORS configuration
-- Rate limiting
-- XSS protection
-- CSRF protection
-- Input sanitization
-- Secure HTTP-only cookies
+- Rate limiting on auth endpoints
+- Input validation with Express Validator
+- Role-Based Access Control (RBAC) on all protected routes
+- Account status checks (active/inactive/suspended)
 
-## 📊 Dashboard Features
+## Reusable UI Components
 
-- Analytics cards with real-time data
-- User management (Admin only)
-- Profile management
-- Settings page
-- Notification center
-- Activity logs
-- Search & filters
-- Data tables with pagination
-- CSV export functionality
+| Component | Description |
+|-----------|-------------|
+| `Button` | CVA-based button with variants (default, destructive, outline, secondary, ghost, link) and sizes |
+| `Card` | Card, CardHeader, CardTitle, CardDescription, CardContent |
+| `DataTable` | Generic typed table with columns, pagination, edit/delete actions |
+| `Modal` | Centered modal with backdrop, configurable sizes |
+| `Drawer` | Slide-in panel from right with backdrop blur |
+| `Pagination` | Page size selector (10/25/50/100/All) with prev/next navigation |
+| `Input` | Labeled input with error state and password show/hide toggle |
+| `Badge` | Status badges with variants (success, warning, danger, info, etc.) |
+| `Avatar` | User avatar with initials fallback |
+| `ConfirmationDialog` | Styled confirmation modal for destructive actions |
+| `ErrorBoundary` | Catches runtime errors with graceful fallback UI |
+| `ThemeToggle` | Light/dark/system theme cycling |
 
-## 🤝 Contributing
+## Theme System
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+The application supports three theme modes:
+- **Light Mode** - Optimized light theme
+- **Dark Mode** - Eye-friendly dark theme
+- **System** - Automatically matches system preferences
 
-## 📝 License
+Theme preference is persisted in localStorage and applied via CSS variables.
+
+## Environment Variables
+
+### Backend (.env)
+```
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/admin-panel
+JWT_ACCESS_SECRET=your-access-secret
+JWT_REFRESH_SECRET=your-refresh-secret
+JWT_ACCESS_EXPIRY=15m
+JWT_REFRESH_EXPIRY=7d
+SMTP_HOST=your-smtp-host
+SMTP_PORT=587
+SMTP_USER=your-email
+SMTP_PASS=your-password
+EMAIL_FROM=noreply@example.com
+CLIENT_URL=http://localhost:5173
+```
+
+### Frontend (.env)
+```
+VITE_API_URL=http://localhost:5000/api
+```
+
+## License
 
 This project is licensed under the MIT License.
-
-## 👥 Authors
-
-Your Name - [Your Email]
-
-## 🙏 Acknowledgments
-
-- React team for React 19
-- Vercel team for Next.js inspiration
-- Shadcn for the amazing UI components
-- All open-source contributors
-
-## 📧 Support
-
-For support, email support@example.com or open an issue in the repository.
-
----
-
-Made with ❤️ using MERN Stack

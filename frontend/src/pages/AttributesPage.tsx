@@ -5,6 +5,7 @@ import * as attributeService from '../services/attributeService';
 import toast from 'react-hot-toast';
 import { Plus, Search } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { ConfirmationDialog } from '../components/ui/ConfirmationDialog';
 import { DataTable, type Column } from '../components/ui/DataTable';
 import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
@@ -13,6 +14,7 @@ const AttributesPage = () => {
   const dispatch = useAppDispatch();
   const { attributes, loading } = useAppSelector((state) => state.attribute);
   const [showModal, setShowModal] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -163,11 +165,15 @@ const AttributesPage = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this attribute?')) return;
+    setDeleteId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteId) return;
 
     try {
       dispatch(setLoading(true));
-      const response = await attributeService.deleteAttribute(id);
+      const response = await attributeService.deleteAttribute(deleteId);
       if (response.data.success) {
         toast.success('Attribute deleted successfully');
         fetchAttributes(1, searchTerm);
@@ -177,6 +183,7 @@ const AttributesPage = () => {
       toast.error(message);
     } finally {
       dispatch(setLoading(false));
+      setDeleteId(null);
     }
   };
 
@@ -185,8 +192,8 @@ const AttributesPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Attributes</h1>
-          <p className="mt-1 text-gray-600 dark:text-gray-400">Manage product attributes</p>
+          <h1 className="text-3xl font-bold text-foreground">Attributes</h1>
+          <p className="mt-1 text-muted-foreground">Manage product attributes</p>
         </div>
         <Button onClick={() => handleOpenModal()} className="flex items-center gap-2">
           <Plus size={20} />
@@ -196,7 +203,7 @@ const AttributesPage = () => {
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute top-3 left-3 text-gray-400" size={20} />
+        <Search className="absolute top-3 left-3 text-muted-foreground" size={20} />
         <Input
           type="text"
           placeholder="Search attributes..."
@@ -207,7 +214,7 @@ const AttributesPage = () => {
       </div>
 
       {/* Attributes Table */}
-      <div className="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+      <div className="overflow-hidden rounded-lg bg-card shadow">
         <DataTable
           data={attributes}
           columns={columns}
@@ -234,7 +241,7 @@ const AttributesPage = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-foreground">
                 Attribute Name *
               </label>
               <Input
@@ -246,7 +253,7 @@ const AttributesPage = () => {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1 block text-sm font-medium text-foreground">
                 Code *
               </label>
               <Input
@@ -260,13 +267,13 @@ const AttributesPage = () => {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               Type
             </label>
             <select
               value={formData.type}
               onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="w-full rounded-lg border border-input bg-background px-4 py-2 text-foreground focus:ring-2 focus:ring-ring"
             >
               <option value="text">Text</option>
               <option value="dropdown">Dropdown</option>
@@ -277,27 +284,27 @@ const AttributesPage = () => {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Enter attribute description"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="w-full rounded-lg border border-input bg-background px-4 py-2 text-foreground focus:ring-2 focus:ring-ring"
               rows={2}
             />
           </div>
 
           {['dropdown', 'checkbox', 'color', 'size'].includes(formData.type) && (
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-2 block text-sm font-medium text-foreground">
                 Values
               </label>
               <div className="space-y-2">
                 {formData.values.map((val, idx) => (
                   <div key={idx} className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="text-sm text-muted-foreground">
                       {val.value} - {val.label}
                     </span>
                     <button
@@ -338,7 +345,7 @@ const AttributesPage = () => {
                 onChange={(e) => setFormData({ ...formData, isRequired: e.target.checked })}
                 className="rounded"
               />
-              <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">Required</span>
+              <span className="ml-2 text-sm text-foreground">Required</span>
             </label>
             <label className="flex items-center">
               <input
@@ -347,7 +354,7 @@ const AttributesPage = () => {
                 onChange={(e) => setFormData({ ...formData, isFilterable: e.target.checked })}
                 className="rounded"
               />
-              <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">Filterable</span>
+              <span className="ml-2 text-sm text-foreground">Filterable</span>
             </label>
           </div>
 
@@ -355,16 +362,23 @@ const AttributesPage = () => {
             <Button type="submit" disabled={loading} className="flex-1">
               {editingId ? 'Update Attribute' : 'Create Attribute'}
             </Button>
-            <Button
-              type="button"
-              onClick={() => setShowModal(false)}
-              className="flex-1 bg-gray-200 text-gray-900 hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-            >
+            <Button type="button" variant="outline" onClick={() => setShowModal(false)} className="flex-1">
               Cancel
             </Button>
           </div>
         </form>
       </Modal>
+
+      <ConfirmationDialog
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={confirmDelete}
+        title="Delete Attribute"
+        description="Are you sure you want to delete this attribute? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+        isLoading={loading}
+      />
     </div>
   );
 };

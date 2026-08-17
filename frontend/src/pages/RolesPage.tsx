@@ -11,6 +11,7 @@ import * as roleService from '../services/roleService';
 import toast from 'react-hot-toast';
 import { Plus, Search } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { ConfirmationDialog } from '../components/ui/ConfirmationDialog';
 import { DataTable, type Column } from '../components/ui/DataTable';
 import { Modal } from '../components/ui/Modal';
 import { Input } from '../components/ui/Input';
@@ -19,6 +20,7 @@ const RolesPage = () => {
   const dispatch = useAppDispatch();
   const { roles, permissions, loading } = useAppSelector((state) => state.role);
   const [showModal, setShowModal] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -142,11 +144,15 @@ const RolesPage = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this role?')) return;
+    setDeleteId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteId) return;
 
     try {
       dispatch(setLoading(true));
-      const response = await roleService.deleteRole(id);
+      const response = await roleService.deleteRole(deleteId);
       if (response.data.success) {
         toast.success('Role deleted successfully');
         fetchRoles(1, searchTerm);
@@ -156,6 +162,7 @@ const RolesPage = () => {
       toast.error(message);
     } finally {
       dispatch(setLoading(false));
+      setDeleteId(null);
     }
   };
 
@@ -164,8 +171,8 @@ const RolesPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Roles</h1>
-          <p className="mt-1 text-gray-600 dark:text-gray-400">Manage user roles and permissions</p>
+          <h1 className="text-3xl font-bold text-foreground">Roles</h1>
+          <p className="mt-1 text-muted-foreground">Manage user roles and permissions</p>
         </div>
         <Button onClick={() => handleOpenModal()} className="flex items-center gap-2">
           <Plus size={20} />
@@ -175,7 +182,7 @@ const RolesPage = () => {
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute top-3 left-3 text-gray-400" size={20} />
+        <Search className="absolute top-3 left-3 text-muted-foreground" size={20} />
         <Input
           type="text"
           placeholder="Search roles..."
@@ -186,7 +193,7 @@ const RolesPage = () => {
       </div>
 
       {/* Roles Table */}
-      <div className="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+      <div className="overflow-hidden rounded-lg bg-card shadow">
         <DataTable
           data={roles}
           columns={columns}
@@ -214,7 +221,7 @@ const RolesPage = () => {
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               Role Name *
             </label>
             <Input
@@ -227,20 +234,20 @@ const RolesPage = () => {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Enter role description"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="w-full rounded-lg border border-input bg-background px-4 py-2 text-foreground focus:ring-2 focus:ring-ring"
               rows={3}
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="mb-2 block text-sm font-medium text-foreground">
               Permissions
             </label>
             <div className="max-h-48 space-y-2 overflow-y-auto">
@@ -264,7 +271,7 @@ const RolesPage = () => {
                     }}
                     className="rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                  <span className="ml-2 text-sm text-foreground">
                     {permission.name} ({permission.action})
                   </span>
                 </label>
@@ -276,16 +283,23 @@ const RolesPage = () => {
             <Button type="submit" disabled={loading} className="flex-1">
               {editingId ? 'Update Role' : 'Create Role'}
             </Button>
-            <Button
-              type="button"
-              onClick={() => setShowModal(false)}
-              className="flex-1 bg-gray-200 text-gray-900 hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-            >
+            <Button type="button" variant="outline" onClick={() => setShowModal(false)} className="flex-1">
               Cancel
             </Button>
           </div>
         </form>
       </Modal>
+
+      <ConfirmationDialog
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={confirmDelete}
+        title="Delete Role"
+        description="Are you sure you want to delete this role? This action cannot be undone."
+        confirmLabel="Delete"
+        variant="danger"
+        isLoading={loading}
+      />
     </div>
   );
 };

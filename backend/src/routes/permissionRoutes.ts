@@ -6,7 +6,8 @@ import {
   updatePermission,
   deletePermission,
 } from '../controllers/permissionController';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
+import { UserRole } from '../types';
 
 const router = Router();
 
@@ -44,7 +45,7 @@ router.get('/:id', getPermissionById);
  *     security:
  *       - bearerAuth: []
  */
-router.post('/', createPermission);
+router.post('/', authorize(UserRole.ADMIN), createPermission);
 
 /**
  * @swagger
@@ -55,7 +56,7 @@ router.post('/', createPermission);
  *     security:
  *       - bearerAuth: []
  */
-router.put('/:id', updatePermission);
+router.put('/:id', authorize(UserRole.ADMIN), updatePermission);
 
 /**
  * @swagger
@@ -66,6 +67,6 @@ router.put('/:id', updatePermission);
  *     security:
  *       - bearerAuth: []
  */
-router.delete('/:id', deletePermission);
+router.delete('/:id', authorize(UserRole.ADMIN), deletePermission);
 
 export default router;

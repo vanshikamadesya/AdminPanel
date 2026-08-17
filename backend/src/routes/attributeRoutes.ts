@@ -6,7 +6,8 @@ import {
   updateAttribute,
   deleteAttribute,
 } from '../controllers/attributeController';
-import { authenticate } from '../middleware/auth';
+import { authenticate, authorize } from '../middleware/auth';
+import { UserRole } from '../types';
 
 const router = Router();
 
@@ -44,7 +45,7 @@ router.get('/:id', getAttributeById);
  *     security:
  *       - bearerAuth: []
  */
-router.post('/', createAttribute);
+router.post('/', authorize(UserRole.ADMIN, UserRole.MODERATOR), createAttribute);
 
 /**
  * @swagger
@@ -55,7 +56,7 @@ router.post('/', createAttribute);
  *     security:
  *       - bearerAuth: []
  */
-router.put('/:id', updateAttribute);
+router.put('/:id', authorize(UserRole.ADMIN, UserRole.MODERATOR), updateAttribute);
 
 /**
  * @swagger
@@ -66,6 +67,6 @@ router.put('/:id', updateAttribute);
  *     security:
  *       - bearerAuth: []
  */
-router.delete('/:id', deleteAttribute);
+router.delete('/:id', authorize(UserRole.ADMIN), deleteAttribute);
 
 export default router;
