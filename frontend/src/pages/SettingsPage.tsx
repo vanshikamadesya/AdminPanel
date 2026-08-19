@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Save, User, Bell, Globe, Palette } from 'lucide-react';
-import { useAppSelector } from '../../store/hooks';
-import { Button } from '../../components/ui/Button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
+import { useAppSelector } from '../store/hooks';
+import { Button } from '../components/ui/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import toast from 'react-hot-toast';
 
 export function SettingsPage() {
