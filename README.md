@@ -1,5 +1,7 @@
 # Orbit Admin Panel
 
+**Live Demo**: [https://admin-panel-sigma-tan.vercel.app](https://admin-panel-sigma-tan.vercel.app)
+
 A production-ready admin panel built with the MERN stack (MongoDB, Express.js, React, Node.js) using TypeScript.
 
 ## Features
